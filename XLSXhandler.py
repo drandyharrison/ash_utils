@@ -23,9 +23,9 @@ class XLSXhandler:
         else:
             raise ValueError("@XLSXhandler creator: {} is not a string".format(fname))
 
-    # Read an Excel workbook from a url and returns whether the url is valid and points to a valid Excel workbook
-    # contents of the workbook are loaded into the panda dataframe self.xlsx_data
     def get_xlsx_from_url(self):
+        """Read an Excel workbook from a url and returns whether the url is valid and points to a valid Excel workbook
+        contents of the workbook are loaded into the panda dataframe self.xlsx_data"""
         try:
             # create URLhandler
             urlhndlr = URLhandler(self.fname)
@@ -60,6 +60,17 @@ class XLSXhandler:
             print("@XLSXhandler.get_xlsx_from_url() URL doesn't exist: {}".format(self.fname))
             self.xlsx_data = None
             return False
+
+    # TODO define the associated unit tests
+    def get_xlsx_from_file(self):
+        try:
+            self.xlsx_data = pd.ExcelFile(self.fname)
+        except xlrd.biffh.XLRDError as e:
+            print("@XLSXhandler.get_xlsx_from_file() Not an xlsx file: {}".format(self.fname))
+            self.xlsx_data = None
+            return False
+        else:
+            return True
 
     def get_sheet_names(self):
         """Return the sheet names"""
