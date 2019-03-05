@@ -1,4 +1,5 @@
 import sys
+import os
 import xlrd
 import pandas as pd
 from urllib.request import urlopen
@@ -7,6 +8,8 @@ from URLhandler import URLhandler
 
 class XLSXhandler:
     """Class for handling Excel files"""
+    # members
+    fname = None    # name of the 'file' containing the Excel document
 
     # creator methods
     def __init__(self):
@@ -61,8 +64,10 @@ class XLSXhandler:
             self.xlsx_data = None
             return False
 
-    # TODO define the associated unit tests
     def get_xlsx_from_file(self):
+        if os.path.isdir(self.fname):
+            print("@XLSXhandler.get_xlsx_from_file() file is a directory: {}".format(self.fname))
+            return False
         try:
             self.xlsx_data = pd.ExcelFile(self.fname)
         except FileNotFoundError as e:
