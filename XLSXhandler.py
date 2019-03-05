@@ -65,6 +65,8 @@ class XLSXhandler:
             return False
 
     def get_xlsx_from_file(self):
+        """Read an Excel workbook from a file; returns whether the file is valid and points to a valid Excel workbook
+        contents of the workbook are loaded into the panda dataframe self.xlsx_data"""
         if os.path.isdir(self.fname):
             print("@XLSXhandler.get_xlsx_from_file() file is a directory: {}".format(self.fname))
             return False
