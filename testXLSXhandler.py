@@ -418,6 +418,49 @@ class testXLSXhandler(unittest.TestCase):
         self.assertRaises(ValueError, xlsx.extract_worksheet_data, worksheet, hdr_row, total_row, start_row, end_row,
                           num_cols)
 
+    # TODO finish
+    def test_get_xlsx_from_file_not_file(self):
+        """Checks that a non-file (e.g. directory) False when checked"""
+        print("@test_get_xlsx_from_file_not_file")
+        # arrange
+        fname = "D:/Documents"
+        # act
+        xlsx = XLSXhandler(fname)
+        # assert
+        self.assertFalse(xlsx.get_xlsx_from_file())
+
+    # TODO file doesn't exist
+    def test_get_xlsx_from_file_not_exist(self):
+        """Checks that a file that doesn't exist returns False when checked"""
+        print("@test_get_xlsx_from_file_not_exist")
+        # arrange
+        fname = "./nofile.txt"
+        # act
+        xlsx = XLSXhandler(fname)
+        # assert
+        self.assertFalse(xlsx.get_xlsx_from_file())
+
+    # TODO check
+    def test_get_xlsx_from_file_exist_not_xlsx(self):
+        """Checks that a valid filename, which exists bit isn't an Excel returns False when checked"""
+        print("@test_get_xlsx_from_file_exist_not_xlsx")
+        # arrange
+        fname = "./textfile.txt"
+        # act
+        xlsx = XLSXhandler(fname)
+        # assert
+        self.assertFalse(xlsx.get_xlsx_from_file())
+
+    # TODO check
+    def test_get_xlsx_from_file_exist_is_xlsx(self):
+        """Checks that a valid file that's an Excel returns True when checked"""
+        print("@test_get_xlsx_from_file_exist_is_xlsx")
+        # arrange
+        fname = "./sample.xlsx"
+        # act
+        xlsx = XLSXhandler(fname)
+        # assert
+        self.assertTrue(xlsx.get_xlsx_from_file())
 
 # run tests
 if __name__ == '__main__':
