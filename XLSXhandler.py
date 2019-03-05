@@ -65,6 +65,10 @@ class XLSXhandler:
     def get_xlsx_from_file(self):
         try:
             self.xlsx_data = pd.ExcelFile(self.fname)
+        except FileNotFoundError as e:
+            print("@XLSXhandler.get_xlsx_from_file() file not found: {}".format(self.fname))
+            self.xlsx_data = None
+            return False
         except xlrd.biffh.XLRDError as e:
             print("@XLSXhandler.get_xlsx_from_file() Not an xlsx file: {}".format(self.fname))
             self.xlsx_data = None
