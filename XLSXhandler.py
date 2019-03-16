@@ -108,12 +108,14 @@ class XLSXhandler:
                     # check row id parameters: hdr_row, total_row, start_row, end_row
                     attr_vals = [hdr_row, total_row, start_row, end_row, num_cols]
                     attr_names = ["hdr_row", "total_row", "start_row", "end_row", "num_cols"]
-                    # check all the attributes are integer and positive
+                    # check all the attributes are integer and positive (except total_row, which can be -1]
                     for idx, val in enumerate(attr_vals):
                         if not isinstance(attr_vals[idx], int):
                             raise ValueError("@extract_worksheet_data(): {} {} is not integer".format(attr_names[idx], attr_vals[idx]))
-                        if attr_vals[idx] <= 0:  # check hdr_row is positive
+                        if idx != 1 and attr_vals[idx] <= 0:  # check values are positive
                             raise ValueError("@extract_worksheet_data(): {} {} is not positive".format(attr_names[idx], attr_vals[idx]))
+                        if idx == 1 and (attr_vals[idx] < -1 or attr_vals[idx] == 0):
+                            raise ValueError("@extract_worksheet_data(): {} {} is an invalid value".format(attr_names[idx], attr_vals[idx]))
                     if start_row > end_row:             # check start_row is before end_row
                         raise ValueError("@extract_worksheet_data(): end_row {} is before start_row {}".format(end_row, start_row))
                     if hdr_row == total_row:            # check hdr_row and total_row are not the same
