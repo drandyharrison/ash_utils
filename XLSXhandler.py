@@ -92,7 +92,6 @@ class XLSXhandler:
 
     def extract_worksheet_data(self, worksheet, hdr_row, total_row, start_row, end_row, num_cols):
         """Return the data contents of the worksheet as a ndarray
-
         worksheet -- name of the worksheet to process
         hdr_row - row comtainer the data header/field names
         total_row -- row with totals, -1 if no totals row
@@ -101,8 +100,8 @@ class XLSXhandler:
         num_col -- number of data columns, column zero is assumed to contain row labels"""
         if isinstance(worksheet, str):
             # check xlsx_data exists
-            try:
                 # check the worksheet exists
+            try:
                 if worksheet in self.xlsx_data.sheet_names:
                     self.raw_data = self.xlsx_data.parse(worksheet)
                     # rename the columns to contiguous integers, makes access easier
@@ -115,7 +114,7 @@ class XLSXhandler:
                     for idx, val in enumerate(attr_vals):
                         if not isinstance(attr_vals[idx], int):
                             raise ValueError("@extract_worksheet_data(): {} {} is not integer".format(attr_names[idx], attr_vals[idx]))
-                        if idx != 1 and attr_vals[idx] <= 0:  # check values are positive
+                        if idx != 1 and attr_vals[idx] < 0:  # check values are non-negative
                             raise ValueError("@extract_worksheet_data(): {} {} is not positive".format(attr_names[idx], attr_vals[idx]))
                         if idx == 1 and (attr_vals[idx] < -1 or attr_vals[idx] == 0):
                             raise ValueError("@extract_worksheet_data(): {} {} is an invalid value".format(attr_names[idx], attr_vals[idx]))
