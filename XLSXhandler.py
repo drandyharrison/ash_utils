@@ -9,7 +9,10 @@ from URLhandler import URLhandler
 class XLSXhandler:
     """Class for handling Excel files"""
     # members
-    fname = None    # name of the 'file' containing the Excel document
+    fname = None        # name of the 'file' containing the Excel document
+    xlsx_data = None    # holds the Excel worksheets
+    raw_data = None     # raw data from Excel worksheet being processed
+    data = None         # data from worksheet to be processed
 
     # creator methods
     def __init__(self):
