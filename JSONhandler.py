@@ -24,6 +24,16 @@ class JSONhandler:
             raise FileNotFoundError
         if os.path.isdir(self.fname):
             raise FileNotFoundError
-        jsondf = pandas.read_json(self.fname)
+        self.jsondf = pandas.read_json(self.fname)
         # TODO check data frame contains data
         return True
+
+    # get the value for a given key
+    def get_val(self, key):
+        if not isinstance(key, str):
+            raise ValueError("@JSONhandler.get_val({}) key is not a string".format(key))
+        try:
+            value = self.jsondf[key][0]
+        except KeyError as e:
+            raise ValueError("@JSONhandler.get_val({}) key is not in JSON".format(key))
+        return value

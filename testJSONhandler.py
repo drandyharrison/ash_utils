@@ -45,11 +45,23 @@ class testURLhandler(unittest.TestCase):
         """Checks that a valid JSON file returns True when read"""
         print("@test_read_json_exist_json")
         # arrange
-        json_fname = "../skittles/skittles_config.json"
+        json_fname = "skittles_config.json"
         # act
         jsonhndlr = JSONhandler(json_fname)
         # assert
         self.assertTrue(jsonhndlr.read_json())
+
+    def test_read_json_key_not_str(self):
+        """Checks that a non-string key raises a ValueError"""
+        print("@test_read_json_key_not_str")
+        # arrange
+        json_fname = "skittles_config.json"
+        key = 25
+        # act
+        jsonhndlr = JSONhandler(json_fname)
+        # assert
+        self.assertTrue(jsonhndlr.read_json())
+        self.assertRaises(ValueError, jsonhndlr.get_val, key)
 
 # run tests
 if __name__ == '__main__':
