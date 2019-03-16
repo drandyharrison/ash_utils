@@ -208,7 +208,7 @@ class testXLSXhandler(unittest.TestCase):
         # arrange
         url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
         worksheet = "1A"
-        hdr_row = 0
+        hdr_row = -1
         total_row = 2
         start_row = 3
         end_row = 3
@@ -284,7 +284,7 @@ class testXLSXhandler(unittest.TestCase):
         total_row = 2
         start_row = 3
         end_row = 5
-        num_cols = 0
+        num_cols = -1
         # act
         xlsx = XLSXhandler(url_str)
         xlsx.get_xlsx_from_url()
