@@ -17,7 +17,8 @@ class GoogleCalAPIHandler:
     service = None
 
     # creator methods
-    def __init__(self):
+    def __init__(self, readonly : bool = True):
+        """creator for read-only access"""
         # The file token.pickle stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
@@ -38,3 +39,19 @@ class GoogleCalAPIHandler:
 
         self.service = build('calendar', 'v3', credentials=self.creds)
 
+    def get_next_n_appts(self, n : int):
+        """Get the next n appointments from the calendar"""
+        # Call the Calendar API
+        now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+        print('Getting the upcoming {} events'.format(n))
+        events_result = self.service.events().list(calendarId='primary', timeMin=now,
+                                            maxResults=n, singleEvents=True,
+                                            orderBy='startTime').execute()
+        events = events_result.get('items', [])
+
+        if not events:
+            print('No upcoming events found.')
+        for event in events:
+            # TODO how to extract the date string and the time string separately?
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            print(start, event['summary'])
