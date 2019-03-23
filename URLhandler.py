@@ -11,7 +11,7 @@ class URLhandler:
     def __init__(self):
         pass
 
-    def __init__(self, url):
+    def __init__(self, url:str):
         if isinstance(url, str):
             # the name of the URL to be processed
             self.url = url

@@ -18,7 +18,7 @@ class XLSXhandler:
     def __init__(self):
         pass
 
-    def __init__(self, fname):
+    def __init__(self, fname:str):
         if (isinstance(fname, str)):
             # check whether string is empty or blank
             if not(fname and fname.strip()):
@@ -90,7 +90,7 @@ class XLSXhandler:
         """Return the sheet names"""
         return self.xlsx_data.sheet_names
 
-    def extract_worksheet_data(self, worksheet, hdr_row, total_row, start_row, end_row, num_cols):
+    def extract_worksheet_data(self, worksheet:str, hdr_row:int, total_row:int, start_row:int, end_row:int, num_cols:int):
         """Return the data contents of the worksheet as a ndarray
         worksheet -- name of the worksheet to process
         hdr_row - row comtainer the data header/field names
