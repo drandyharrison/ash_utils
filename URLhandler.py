@@ -8,7 +8,7 @@ class URLhandler:
     url = None  # URL to be handled
     good_codes = [OK, FOUND, MOVED_PERMANENTLY]
 
-    # creator methods
+    # constructor methods
     def __init__(self):
         pass
 
@@ -18,6 +18,10 @@ class URLhandler:
             self.url = url
         else:
             raise ValueError("@URLhandler creator: {} is not a string".format(url))
+
+    # destructor method
+    def __del__(self):
+        print("{} [{}] died".format(self.__class__.__name__, self.url))
 
     # method to check if a URL exists without downloading the whole file. It only checks the URL header.
     def check_url(self):

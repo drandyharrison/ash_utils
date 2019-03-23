@@ -17,7 +17,7 @@ class GoogleCalAPIHandler:
     creds = None
     service = None
 
-    # creator methods
+    # constructor methods
     def __init__(self, readonly : bool = True):
         """creator for read-only access"""
         # The file token.pickle stores the user's access and refresh tokens, and is
@@ -39,6 +39,10 @@ class GoogleCalAPIHandler:
                 pickle.dump(self.creds, token)
 
         self.service = build('calendar', 'v3', credentials=self.creds)
+
+    # destructor method
+    def __del__(self):
+        print("{} died".format(self.__class__.__name__))
 
     def get_next_n_appts(self, n : int):
         """Get the next n appointments from the calendar"""

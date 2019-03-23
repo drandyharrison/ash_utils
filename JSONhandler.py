@@ -6,7 +6,7 @@ class JSONhandler:
     fname = None    # name of the JSON file
     jsondf = None   # data frame for JSON file
 
-    # creator methods
+    # constructor methods
     def __init__(self):
         pass
 
@@ -16,6 +16,10 @@ class JSONhandler:
             self.fname = fname
         else:
             raise ValueError("@URLhandler creator: {} is not a string".format(fname))
+
+    # destructor method
+    def __del__(self):
+        print("{} [{}] died".format(self.__class__.__name__, self.fname))
 
     # method to read JSON file
     def read_json(self):

@@ -14,7 +14,7 @@ class XLSXhandler:
     raw_data = None     # raw data from Excel worksheet being processed
     data = None         # data from worksheet to be processed
 
-    # creator methods
+    # constructor methods
     def __init__(self):
         pass
 
@@ -28,6 +28,10 @@ class XLSXhandler:
                 self.fname = fname
         else:
             raise ValueError("@XLSXhandler creator: {} is not a string".format(fname))
+
+    # destructor method
+    def __del__(self):
+        print("{} [{}] died".format(self.__class__.__name__, self.fname))
 
     def get_xlsx_from_url(self):
         """Read an Excel workbook from a url and returns whether the url is valid and points to a valid Excel workbook
