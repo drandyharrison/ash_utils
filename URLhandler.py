@@ -6,6 +6,7 @@ import requests
 class URLhandler:
     """Class for handling urls"""
     url = None  # URL to be handled
+    good_codes = [OK, FOUND, MOVED_PERMANENTLY]
 
     # creator methods
     def __init__(self):
@@ -22,12 +23,10 @@ class URLhandler:
     def check_url(self):
         # check it's a valid url string
         if validators.url(self.url):
-            # TODO make into a class attribute
-            good_codes = [OK, FOUND, MOVED_PERMANENTLY]
             # check url exists
             try:
                 request = requests.get(self.url)
-                if request.status_code in good_codes:
+                if request.status_code in self.good_codes:
                     return True
                 else:
                     print("@URLhanmdler.check_url() Website returned response code: {code}".format(code=request.status_code))
