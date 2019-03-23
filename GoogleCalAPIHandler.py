@@ -1,5 +1,6 @@
 from __future__ import print_function
 import datetime
+import dateutil.parser
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -53,5 +54,7 @@ class GoogleCalAPIHandler:
             print('No upcoming events found.')
         for event in events:
             # TODO how to extract the date string and the time string separately?
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
+            start_str = event['start'].get('dateTime', event['start'].get('date'))
+            start_datetime = dateutil.parser.parse(start_str)
+            start_date = start_datetime.date()
+            print("[{}]: {}".format(start_date, event['summary']))
