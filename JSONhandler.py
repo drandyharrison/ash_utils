@@ -10,7 +10,7 @@ class JSONhandler:
     def __init__(self):
         pass
 
-    def __init__(self, fname):
+    def __init__(self, fname:str):
         if isinstance(fname, str):
             # the name of the URL to be processed
             self.fname = fname
@@ -29,7 +29,7 @@ class JSONhandler:
         return True
 
     # get the value for a given key
-    def get_val(self, key):
+    def get_val(self, key:str):
         if not isinstance(key, str):
             raise ValueError("@JSONhandler.get_val({}) key is not a string".format(key))
         try:
