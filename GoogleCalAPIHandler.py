@@ -3,19 +3,23 @@ import datetime
 import dateutil.parser
 import pickle
 import os.path
+import sys
+import csv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 class GoogleCalAPIHandler:
-    """Class for handling the Google Calendar API:
-    intro see https://developers.google.com/calendar/quickstart/python (steps 1 and 2 done)
-    add event https://developers.google.com/calendar/create-events"""
+    """Class for handling the Google Calendar API"""
     # members
     # If modifying these scopes, delete the file token.pickle.
-    SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+    #SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+    SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
     service = None
+    # TODO do we want this to be a separate class?
+    tzdata = "./zone1970.tab"   # file containing the list of time zones
+    zones = None                # list of valid time zones
 
     # constructor methods
     def __init__(self, readonly : bool = True):
@@ -37,13 +41,26 @@ class GoogleCalAPIHandler:
             # Save the credentials for the next run
             with open('token.pickle', 'wb') as token:
                 pickle.dump(self.creds, token)
-
         self.service = build('calendar', 'v3', credentials=self.creds)
+        # read in timezone database
+        self.zones = []
+        try:
+            for x in csv.reader(open(self.tzdata, 'r'), delimiter='\t'):
+                # skip the rows that start #
+                if not x[0].startswith("#"):
+                    if len(x) > 2:
+                        self.zones.append(x[2])
+        except FileNotFoundError:
+            print("@GoogleCalAPIHandler: {} not found".format(self.tzdata))
+        except:
+                print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
+        print("Read list of valid time zones: {}".format(len(self.zones)))
 
     # destructor method
     def __del__(self):
         print("{} died".format(self.__class__.__name__))
 
+    # intro see https://developers.google.com/calendar/quickstart/python
     def get_next_n_appts(self, n : int):
         """Get the next n appointments from the calendar"""
         # Call the Calendar API
@@ -57,8 +74,26 @@ class GoogleCalAPIHandler:
         if not events:
             print('No upcoming events found.')
         for event in events:
-            # TODO how to extract the date string and the time string separately?
+            # extract the date string
             start_str = event['start'].get('dateTime', event['start'].get('date'))
             start_datetime = dateutil.parser.parse(start_str)
             start_date = start_datetime.date()
             print("[{}]: {}".format(start_date, event['summary']))
+
+    # add event https://developers.google.com/calendar/create-events
+    def add_event(self, email:str, event):
+        """Add event to calendar
+        * email   email address for the calendar
+        * event   event to add to the calendar"""
+        # TODO check email is a string and a valid email address
+        event = self.service.events().insert(calendarId=email, body=event).execute()
+        print('Event created: {}'.format((event.get('htmlLink'))))
+
+    def is_tz_valid(self, tz : str):
+        """Is the timezone valid
+        * tz    timezone"""
+        # check tz is a string
+        if not isinstance(tz, str):
+            raise TypeError("@is_tz_valid({}) timezone is not a string".format(tz))
+        # check the timezone is in the database
+        return (tz in self.zones)
