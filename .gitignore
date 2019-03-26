@@ -2,3 +2,9 @@
 __pycache__/
 
 \.idea/
+
+credentials\.json
+
+token\.pickle
+
+zone1970\.tab
