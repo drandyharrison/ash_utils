@@ -9,6 +9,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from validate_email import validate_email
+from TimeZone import TimeZone
 
 class GoogleCalAPIHandler:
     """Class for handling the Google Calendar API"""
@@ -18,9 +19,7 @@ class GoogleCalAPIHandler:
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
     service = None
-    # TODO do we want this to be a separate class?
-    tzdata = "./zone1970.tab"   # file containing the list of time zones
-    zones = None                # list of valid time zones
+    tzReader = TimeZone()
 
     # constructor methods
     def __init__(self, readonly : bool = True):
@@ -43,19 +42,6 @@ class GoogleCalAPIHandler:
             with open('token.pickle', 'wb') as token:
                 pickle.dump(self.creds, token)
         self.service = build('calendar', 'v3', credentials=self.creds)
-        # read in timezone database
-        self.zones = []
-        try:
-            for x in csv.reader(open(self.tzdata, 'r'), delimiter='\t'):
-                # skip the rows that start #
-                if not x[0].startswith("#"):
-                    if len(x) > 2:
-                        self.zones.append(x[2])
-        except FileNotFoundError:
-            print("@GoogleCalAPIHandler: {} not found".format(self.tzdata))
-        except:
-                print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
-        print("Read list of valid time zones: {}".format(len(self.zones)))
 
     # destructor method
     def __del__(self):
@@ -92,7 +78,8 @@ class GoogleCalAPIHandler:
             raise ValueError("@add_event({}) email is not a string".format(email))
         # no check as to whether email exists
         try:
-            success = self.is_tz_valid(event['start']['timeZone']) and self.is_tz_valid(event['end']['timeZone'])
+            success = self.tzReader.is_tz_valid(event['start']['timeZone']) and\
+                      self.tzReader.is_tz_valid(event['end']['timeZone'])
             if not success:
                 print("Time zone invalid\n\tstart: {}\nend: {}".format(event['start']['timeZone'], event['end']['timeZone']))
         except:
@@ -109,11 +96,3 @@ class GoogleCalAPIHandler:
                 success = True
         return success
 
-    def is_tz_valid(self, tz : str):
-        """Is the timezone valid
-        * tz    timezone"""
-        # check tz is a string
-        if not isinstance(tz, str):
-            raise TypeError("@is_tz_valid({}) timezone is not a string".format(tz))
-        # check the timezone is in the database
-        return (tz in self.zones)
