@@ -66,7 +66,7 @@ class testGoogleCalAPIHandler(unittest.TestCase):
         self.assertRaises(TypeError, calhndlr.add_event, email, event)
 
     def test_add_event_email_invalid(self):
-        """Checks that add_event raises TypeError for invalid email address"""
+        """Checks that add_event raises ValueError for invalid email address"""
         print("@test_add_event_email_invalid")
         # arrange
         email = "invalid email"
@@ -87,6 +87,99 @@ class testGoogleCalAPIHandler(unittest.TestCase):
         calhndlr = GoogleCalAPIHandler()
         # assert
         self.assertRaises(ValueError, calhndlr.add_event, email, event)
+
+    def test_add_event_email_valid(self):
+        """Checks that add_event returns True for valid email address and valid event"""
+        print("@test_add_event_email_invalid")
+        # arrange
+        email = "iam.andyharrison@gmail.com"
+        event = {
+            'summary': 'Skittles test',
+            'location': 'Venue',
+            'description': 'Home/Away (Opposition)',
+            'start': {
+                'dateTime': '2019-03-28T20:00:00',
+                'timeZone': 'Europe/London',
+            },
+            'end': {
+                'dateTime': '2019-03-28T23:00:00',
+                'timeZone': 'Europe/London',
+            },
+        }
+        # act
+        calhndlr = GoogleCalAPIHandler()
+        # assert
+        self.assertTrue(calhndlr.add_event(email, event))
+
+    def test_add_event_start_tz_invalid(self):
+        """Checks that add_event returns False for invalid start tz"""
+        print("@test_add_event_start_tz_invalid")
+        # arrange
+        email = "iam.andyharrison@gmail.com"
+        event = {
+            'summary': 'Skittles test',
+            'location': 'Venue',
+            'description': 'Home/Away (Opposition)',
+            'start': {
+                'dateTime': '2019-03-28T20:00:00',
+                'timeZone': 'invalid',
+            },
+            'end': {
+                'dateTime': '2019-03-28T23:00:00',
+                'timeZone': 'Europe/London',
+            },
+        }
+        # act
+        calhndlr = GoogleCalAPIHandler()
+        # assert
+        self.assertFalse(calhndlr.add_event(email, event))
+
+    def test_add_event_end_tz_invalid(self):
+        """Checks that add_event returns False for invalid end tz"""
+        print("@test_add_event_end_tz_invalid")
+        # arrange
+        email = "iam.andyharrison@gmail.com"
+        event = {
+            'summary': 'Skittles test',
+            'location': 'Venue',
+            'description': 'Home/Away (Opposition)',
+            'start': {
+                'dateTime': '2019-03-28T20:00:00',
+                'timeZone': 'Europe/London',
+            },
+            'end': {
+                'dateTime': '2019-03-28T23:00:00',
+                'timeZone': 'invalid',
+            },
+        }
+        # act
+        calhndlr = GoogleCalAPIHandler()
+        # assert
+        self.assertFalse(calhndlr.add_event(email, event))
+
+
+    def test_add_event_end_event_invalid(self):
+        """Checks that add_event returns False for invalid event"""
+        print("@test_add_event_end_event_invalid")
+        # arrange
+        email = "iam.andyharrison@gmail.com"
+        event = {
+            'summary': 'Skittles test',
+            'location': 'Venue',
+            'description': 'Home/Away (Opposition)',
+            'start': {
+                'dateTime': '2019-03-28T20:00:00',
+                'timeZone': 'Europe/London',
+            },
+            'udder': {
+                'dateTime': '2019-03-28T23:00:00',
+                'timeZone': 'Europe/London',
+            },
+        }
+        # act
+        calhndlr = GoogleCalAPIHandler()
+        # assert
+        self.assertFalse(calhndlr.add_event(email, event))
 
 # run tests
 if __name__ == '__main__':

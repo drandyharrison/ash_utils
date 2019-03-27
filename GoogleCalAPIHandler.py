@@ -90,9 +90,24 @@ class GoogleCalAPIHandler:
             raise TypeError("@add_event({}) email is not a string".format(email))
         if not validate_email(email):
             raise ValueError("@add_event({}) email is not a string".format(email))
-        # TODO use is_tz_valid() to check timezone is valid
-        event = self.service.events().insert(calendarId=email, body=event).execute()
-        print('Event created: {}'.format((event.get('htmlLink'))))
+        # no check as to whether email exists
+        try:
+            success = self.is_tz_valid(event['start']['timeZone']) and self.is_tz_valid(event['end']['timeZone'])
+            if not success:
+                print("Time zone invalid\n\tstart: {}\nend: {}".format(event['start']['timeZone'], event['end']['timeZone']))
+        except:
+            print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
+            success = False
+        if success:
+            try:
+                event = self.service.events().insert(calendarId=email, body=event).execute()
+            except:
+                print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
+                success = False
+            else:
+                print('Event created: {}'.format((event.get('htmlLink'))))
+                success = True
+        return success
 
     def is_tz_valid(self, tz : str):
         """Is the timezone valid
