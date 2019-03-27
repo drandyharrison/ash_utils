@@ -8,6 +8,7 @@ import csv
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from validate_email import validate_email
 
 class GoogleCalAPIHandler:
     """Class for handling the Google Calendar API"""
@@ -85,7 +86,11 @@ class GoogleCalAPIHandler:
         """Add event to calendar
         * email   email address for the calendar
         * event   event to add to the calendar"""
-        # TODO check email is a string and a valid email address
+        if not isinstance(email, str):
+            raise TypeError("@add_event({}) email is not a string".format(email))
+        if not validate_email(email):
+            raise ValueError("@add_event({}) email is not a string".format(email))
+        # TODO use is_tz_valid() to check timezone is valid
         event = self.service.events().insert(calendarId=email, body=event).execute()
         print('Event created: {}'.format((event.get('htmlLink'))))
 
