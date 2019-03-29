@@ -92,7 +92,7 @@ class GoogleCalAPIHandler:
                 print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
                 success = False
             else:
-                print('Event created: {}'.format((event.get('htmlLink'))))
+                # print('Event created: {}'.format((event.get('htmlLink'))))
                 success = True
         return success
 
