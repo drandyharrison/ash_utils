@@ -11,6 +11,18 @@ from google.auth.transport.requests import Request
 from validate_email import validate_email
 from TimeZone import TimeZone
 
+# define singleton decorator
+def singleton(cls):
+    instance = [None]
+    def wrapper(*args, **kwargs):
+        if instance[0] is None:
+            instance[0] = cls(*args, **kwargs)
+        return instance[0]
+
+    return wrapper
+
+# add decorator to make a singleton class
+@singleton
 class GoogleCalAPIHandler:
     """Class for handling the Google Calendar API"""
     # members
