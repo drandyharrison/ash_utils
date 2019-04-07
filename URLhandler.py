@@ -13,6 +13,10 @@ class URLhandler:
         pass
 
     def __init__(self, url:str):
+        """Constructor
+        :param url: url of the Excel workbook
+        :raises ValueError: if url is not a string
+        """
         if isinstance(url, str):
             # the name of the URL to be processed
             self.url = url
@@ -23,8 +27,10 @@ class URLhandler:
     def __del__(self):
         print("{} [{}] died".format(self.__class__.__name__, self.url))
 
-    # method to check if a URL exists without downloading the whole file. It only checks the URL header.
     def check_url(self):
+        """check if a URL exists without downloading the whole file. It only checks the URL header.
+        :returne: whether url is valid
+        """
         # check it's a valid url string
         if validators.url(self.url):
             # check url exists

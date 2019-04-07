@@ -7,18 +7,20 @@ import warnings
 def create_barchart(x_data, y_data, width, colour, xlabel, title, fig_id, sub_id, ylabel, series_name, show=True,
                     type_of_bar='s'):
     """Create a bar chart
-    x_data      - the x coordinates of the bars (the categories, don't have to be numeric)
-    y_data      - the height of the bars
-    width       - width of the bars
-    colour      - the colour of the bars
-    xlabel      - label for the x-axis
-    title       - title for the bar chart
-    fig_id      - figure id
-    sub_id      - subplot id
-    ylabel      - label for the y-axis
-    series_name - the names of the series to be plotted (mainly used for the legend)
-    show        - boolean flag to indicate whether to show figure
-    type_of_bar - type of bar chart: 'b' - basic, 'h' - horizontal"""
+    :param x_data: the x coordinates of the bars (the categories, don't have to be numeric)
+    :param y_data: the height of the bars
+    :param width: width of the bars
+    :param colour: the colour of the bars
+    :param xlabel: label for the x-axis
+    :param title: title for the bar chart
+    :param fig_id: figure id
+    :param sub_id: subplot id
+    :param ylabel: label for the y-axis
+    :param series_name: the names of the series to be plotted (mainly used for the legend)
+    :param show: boolean flag to indicate whether to show figure
+    :param type_of_bar: type of bar chart: 'b' - basic, 'h' - horizontal
+    :raises ValueError: when parameter has an invalid value
+    """
     # validate parameters
     # TODO is there scope to simplify with asserts or validators?
     if not isinstance(x_data, numpy.ndarray):

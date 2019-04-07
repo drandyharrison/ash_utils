@@ -13,12 +13,12 @@ from TimeZone import TimeZone
 
 # define singleton decorator
 def singleton(cls):
+    """Singleton decorator"""
     instance = [None]
     def wrapper(*args, **kwargs):
         if instance[0] is None:
             instance[0] = cls(*args, **kwargs)
         return instance[0]
-
     return wrapper
 
 # add decorator to make a singleton class
@@ -61,7 +61,9 @@ class GoogleCalAPIHandler:
 
     # intro see https://developers.google.com/calendar/quickstart/python
     def get_next_n_appts(self, n : int):
-        """Get the next n appointments from the calendar"""
+        """Get the next n appointments from the calendar
+        :param n: number of appointments to read from the calendar
+        """
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
         print('Getting the upcoming {} events'.format(n))
@@ -82,8 +84,10 @@ class GoogleCalAPIHandler:
     # add event https://developers.google.com/calendar/create-events
     def add_event(self, email:str, event):
         """Add event to calendar
-        * email   email address for the calendar
-        * event   event to add to the calendar"""
+        :param email: email address for the calendar
+        :param event: event to add to the calendar
+        :returns: whether writing the appointment was successful
+        """
         if not isinstance(email, str):
             raise TypeError("@add_event({}) email is not a string".format(email))
         if not validate_email(email):

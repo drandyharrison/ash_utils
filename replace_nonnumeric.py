@@ -3,9 +3,11 @@ import numpy
 
 def replace_nonnumeric(data, nonnumeric=numpy.nan, cast=False):
     """Given an iterable object, replace any non-numeric objects
-    data      - the iterable object to be modified
-    nonumeric - replace non-numeric values with this value
-    cast      - attempt to cast non-numeric values; e.g. a string like '123'"""
+    :param data: the iterable object to be modified
+    :param nonumeric: replace non-numeric values with this value
+    :param cast: attempt to cast non-numeric values; e.g. a string like '123'
+    :raises TypeError: when a parameter has an invalid type or value
+    """
     # validate inputs
     try:
         iterator = iter(data)

@@ -19,6 +19,10 @@ class XLSXhandler:
         pass
 
     def __init__(self, fname:str):
+        """Constructor
+        :param fanme: name of the Excel file to be handled
+        :raises ValueError: if fname is not a string or blank
+        """
         if (isinstance(fname, str)):
             # check whether string is empty or blank
             if not(fname and fname.strip()):
@@ -34,8 +38,10 @@ class XLSXhandler:
         print("{} [{}] died".format(self.__class__.__name__, self.fname))
 
     def get_xlsx_from_url(self):
-        """Read an Excel workbook from a url and returns whether the url is valid and points to a valid Excel workbook
-        contents of the workbook are loaded into the panda dataframe self.xlsx_data"""
+        """Read an Excel workbook from a url and points to a valid Excel workbook
+        contents of the workbook are loaded into the panda dataframe self.xlsx_data
+        :returns: whether the url is valid
+        """
         try:
             # create URLhandler
             urlhndlr = URLhandler(self.fname)
@@ -72,8 +78,10 @@ class XLSXhandler:
             return False
 
     def get_xlsx_from_file(self):
-        """Read an Excel workbook from a file; returns whether the file is valid and points to a valid Excel workbook
-        contents of the workbook are loaded into the panda dataframe self.xlsx_data"""
+        """Read an Excel workbook from a file and points to a valid Excel workbook
+        contents of the workbook are loaded into the panda dataframe self.xlsx_data
+        :returns: whether the file is valid
+        """
         if os.path.isdir(self.fname):
             print("@XLSXhandler.get_xlsx_from_file() file is a directory: {}".format(self.fname))
             return False
@@ -96,12 +104,14 @@ class XLSXhandler:
 
     def extract_worksheet_data(self, worksheet:str, hdr_row:int, total_row:int, start_row:int, end_row:int, num_cols:int):
         """Return the data contents of the worksheet as a ndarray
-        worksheet -- name of the worksheet to process
-        hdr_row - row comtainer the data header/field names
-        total_row -- row with totals, -1 if no totals row
-        start_row -- first row containing data
-        end_row -- last row containing data
-        num_col -- number of data columns, column zero is assumed to contain row labels"""
+        :param worksheet: name of the worksheet to process
+        :param hdr_row: row comtainer the data header/field names
+        :param total_row: row with totals, -1 if no totals row
+        :param start_row: first row containing data
+        :param end_row: last row containing data
+        :param num_col: number of data columns, column zero is assumed to contain row labels
+        :raises ValueError: when a parameter has an invalid value
+        """
         if isinstance(worksheet, str):
             # check xlsx_data exists
                 # check the worksheet exists
