@@ -1,5 +1,17 @@
 import csv
 
+# define singleton decorator
+def singleton(cls):
+    """Singleton decorator"""
+    instance = [None]
+    def wrapper(*args, **kwargs):
+        if instance[0] is None:
+            instance[0] = cls(*args, **kwargs)
+        return instance[0]
+    return wrapper
+
+# add decorator to make a singleton class
+@singleton
 class TimeZone:
     """Class for storing and querying a list of time zones"""
     # TODO need to include a reference to the source
