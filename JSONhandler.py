@@ -12,7 +12,8 @@ class JSONhandler:
 
     def __init__(self, fname:str):
         """Constructor
-        :param fname: file name of the JSON file to be handled
+        :param fname: str
+            file name of the JSON file to be handled
         :raises ValueError: if fname is not a string
         """
         if isinstance(fname, str):
@@ -27,7 +28,8 @@ class JSONhandler:
 
     def read_json(self):
         """method to read JSON file
-        :returns: whether fname is a valid JSON file
+        :return: bool
+            is fname is a valid JSON file?
         :raises FileNotFoundError: if fname is not a valid or existing file
         """
         # check JSON file (fname) exists and is a file
@@ -41,8 +43,11 @@ class JSONhandler:
 
     def get_val(self, key:str):
         """"get the value for a given key
-        :param key: key to be matched
+        :param key: str
+            key to be matched
         :raises ValueError: if key is not a string or is not valid
+        :return: [type]
+            the value for tha given key, type can vary
         """
         if not isinstance(key, str):
             raise ValueError("@JSONhandler.get_val({}) key is not a string".format(key))

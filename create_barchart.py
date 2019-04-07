@@ -4,22 +4,35 @@ import warnings
 
 
 # TODO turn positional parameters into keyword parameters - update unit tests and call
-def create_barchart(x_data, y_data, width, colour, xlabel, title, fig_id, sub_id, ylabel, series_name, show=True,
-                    type_of_bar='s'):
+def create_barchart(x_data:numpy.ndarray, y_data:numpy.ndarray, width:float, colour:list, xlabel:str, title:str,
+                    fig_id:int, sub_id:int, ylabel:str, series_name:list, show=True, type_of_bar='s'):
     """Create a bar chart
-    :param x_data: the x coordinates of the bars (the categories, don't have to be numeric)
-    :param y_data: the height of the bars
-    :param width: width of the bars
-    :param colour: the colour of the bars
-    :param xlabel: label for the x-axis
-    :param title: title for the bar chart
-    :param fig_id: figure id
-    :param sub_id: subplot id
-    :param ylabel: label for the y-axis
-    :param series_name: the names of the series to be plotted (mainly used for the legend)
-    :param show: boolean flag to indicate whether to show figure
-    :param type_of_bar: type of bar chart: 'b' - basic, 'h' - horizontal
-    :raises ValueError: when parameter has an invalid value
+    :param x_data: numpy.ndarray
+        the x coordinates of the bars (the categories, don't have to be numeric)
+    :param y_data: numpy.ndarray
+        the height of the bars
+    :param width: float
+        width of the bars
+    :param colour: list
+        the colour of the bars
+    :param xlabel: str
+        label for the x-axis
+    :param title: str
+        title for the bar chart
+    :param fig_id: int
+        figure id
+    :param sub_id: int
+        subplot id
+    :param ylabel: str
+        label for the y-axis
+    :param series_name: list
+        the names of the series to be plotted (mainly used for the legend)
+    :param show: bool
+        boolean flag to indicate whether to show figure
+    :param type_of_bar: str
+        type of bar chart: 'b' - basic, 'h' - horizontal
+    :raises TypeError: when a parameter has the wrong type
+    :raises ValueError: when a parameter has an invalid value
     """
     # validate parameters
     # TODO is there scope to simplify with asserts or validators?

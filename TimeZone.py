@@ -30,7 +30,8 @@ class TimeZone:
 
     def is_tz_valid(self, tz : str):
         """Is the timezone valid
-        :param tz: timezone
+        :param tz: str
+            timezone
         :raises TypeError: if timezone is not a string
         """
         # check tz is a string

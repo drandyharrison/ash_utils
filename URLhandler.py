@@ -14,7 +14,8 @@ class URLhandler:
 
     def __init__(self, url:str):
         """Constructor
-        :param url: url of the Excel workbook
+        :param url: str
+            url of the Excel workbook
         :raises ValueError: if url is not a string
         """
         if isinstance(url, str):
@@ -29,7 +30,8 @@ class URLhandler:
 
     def check_url(self):
         """check if a URL exists without downloading the whole file. It only checks the URL header.
-        :returne: whether url is valid
+        :return: bool
+            is url is valid?
         """
         # check it's a valid url string
         if validators.url(self.url):

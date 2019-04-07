@@ -35,7 +35,10 @@ class GoogleCalAPIHandler:
 
     # constructor methods
     def __init__(self, readonly : bool = True):
-        """creator for read-only access"""
+        """creator for read-only access
+        :param readonly: bool
+            create a read-only version of the class
+        """
         # The file token.pickle stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
@@ -62,7 +65,8 @@ class GoogleCalAPIHandler:
     # intro see https://developers.google.com/calendar/quickstart/python
     def get_next_n_appts(self, n : int):
         """Get the next n appointments from the calendar
-        :param n: number of appointments to read from the calendar
+        :param n: int
+            number of appointments to read from the calendar
         """
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
@@ -84,9 +88,12 @@ class GoogleCalAPIHandler:
     # add event https://developers.google.com/calendar/create-events
     def add_event(self, email:str, event):
         """Add event to calendar
-        :param email: email address for the calendar
-        :param event: event to add to the calendar
-        :returns: whether writing the appointment was successful
+        :param email: str
+            email address for the calendar
+        :param event: [event]
+            event to add to the calendar
+        :return: bool
+            was writing the appointment was successful?
         """
         if not isinstance(email, str):
             raise TypeError("@add_event({}) email is not a string".format(email))
