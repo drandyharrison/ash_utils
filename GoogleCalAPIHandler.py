@@ -10,16 +10,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from validate_email import validate_email
 from TimeZone import TimeZone
-
-# define singleton decorator
-def singleton(cls):
-    """Singleton decorator"""
-    instance = [None]
-    def wrapper(*args, **kwargs):
-        if instance[0] is None:
-            instance[0] = cls(*args, **kwargs)
-        return instance[0]
-    return wrapper
+from ash_singleton import singleton
 
 # add decorator to make a singleton class
 @singleton
