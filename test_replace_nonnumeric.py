@@ -1,6 +1,7 @@
 import unittest
 import numpy
 from replace_nonnumeric import replace_nonnumeric
+from replace_nonnumeric import are_replace_nonnumeric_params_valid
 
 class testReplaceNonnumeric(unittest.TestCase):
     def SetUp(self):
@@ -96,6 +97,28 @@ class testReplaceNonnumeric(unittest.TestCase):
         replace_nonnumeric(test_data, nonnumeric=nonnumeric_val, cast=cast_val)
         # assert
         self.assertTrue(numpy.isnan(test_data[0]))
+
+    def test_are_replace_nonnumeric_params_valid_nonnumeric_not_numeric(self):
+        """Check are_replace_nonnumeric_params_valid throws a TypeError if nonnumeric is not numeric"""
+        print("@test_are_replace_nonnumeric_params_valid_nonnumeric_not_numeric")
+        # arrange
+        test_data = [2]
+        nonnumeric_val = "nan"
+        cast_val = False
+        # act
+        # assert
+        self.assertRaises(TypeError, are_replace_nonnumeric_params_valid, test_data, nonnumeric=nonnumeric_val, cast=cast_val)
+
+    def test_are_replace_nonnumeric_params_valid_cast_not_boolean(self):
+        """Check are_replace_nonnumeric_params_valid throws a TypeError if cast is not boolean"""
+        print("@test_are_replace_nonnumeric_params_valid_cast_not_boolean")
+        # arrange
+        test_data = [2]
+        nonnumeric_val = numpy.nan
+        cast_val = "x"
+        # act
+        # assert
+        self.assertRaises(TypeError, are_replace_nonnumeric_params_valid, test_data, nonnumeric=nonnumeric_val, cast=cast_val)
 
 
 # run tests
