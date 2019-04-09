@@ -76,6 +76,21 @@ class GoogleCalAPIHandler:
             start_date = start_datetime.date()
             print("[{}]: {}".format(start_date, event['summary']))
 
+    def are_add_event_params_valid(self, email:str, event):
+        """Add event to calendar
+        :param email: str
+            email address for the calendar
+        :param event: [event]
+            event to add to the calendar
+        :return: bool
+            are parameters valid?
+        """
+        if not isinstance(email, str):
+            raise TypeError("@add_event({}) email is not a string".format(email))
+        if not validate_email(email):
+            raise ValueError("@add_event({}) email is not a valid email".format(email))
+        return True
+
     # add event https://developers.google.com/calendar/create-events
     def add_event(self, email:str, event):
         """Add event to calendar
@@ -86,27 +101,26 @@ class GoogleCalAPIHandler:
         :return: bool
             was writing the appointment was successful?
         """
-        if not isinstance(email, str):
-            raise TypeError("@add_event({}) email is not a string".format(email))
-        if not validate_email(email):
-            raise ValueError("@add_event({}) email is not a string".format(email))
-        # no check as to whether email exists
-        try:
-            success = self.tzReader.is_tz_valid(event['start']['timeZone']) and\
-                      self.tzReader.is_tz_valid(event['end']['timeZone'])
-            if not success:
-                print("Time zone invalid\n\tstart: {}\nend: {}".format(event['start']['timeZone'], event['end']['timeZone']))
-        except:
-            print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
-            success = False
-        if success:
+        if self.are_add_event_params_valid(email, event):
+            # no check as to whether email exists
             try:
-                event = self.service.events().insert(calendarId=email, body=event).execute()
+                success = self.tzReader.is_tz_valid(event['start']['timeZone']) and\
+                          self.tzReader.is_tz_valid(event['end']['timeZone'])
+                if not success:
+                    print("Time zone invalid\n\tstart: {}\nend: {}".format(event['start']['timeZone'], event['end']['timeZone']))
             except:
                 print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
                 success = False
-            else:
-                # print('Event created: {}'.format((event.get('htmlLink'))))
-                success = True
+            if success:
+                try:
+                    event = self.service.events().insert(calendarId=email, body=event).execute()
+                except:
+                    print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
+                    success = False
+                else:
+                    # print('Event created: {}'.format((event.get('htmlLink'))))
+                    success = True
+        else:
+            success = False
         return success
 
