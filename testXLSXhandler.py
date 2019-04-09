@@ -1,7 +1,6 @@
 import unittest
 from XLSXhandler import XLSXhandler
 
-
 class testXLSXhandler(unittest.TestCase):
     def SetUp(self):
         """set-up code, which is called before each test, to avoid repetition"""
@@ -115,7 +114,7 @@ class testXLSXhandler(unittest.TestCase):
 
     def test_extract_worksheet_data_no_workbook(self):
         """Check extract_worksheet_data throws a ValueError if workbook hasn't been loaded"""
-        print("@test_extract_worksheet_data_not_in_workbook")
+        print("@test_extract_worksheet_data_no_workbook")
         # arrange
         url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
         worksheet = "1A"
@@ -457,6 +456,311 @@ class testXLSXhandler(unittest.TestCase):
         xlsx = XLSXhandler(fname)
         # assert
         self.assertTrue(xlsx.get_xlsx_from_file())
+
+    def test_are_extract_worksheet_data_params_valid_not_string(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError for a non-string worksheet name"""
+        print("@test_are_extract_worksheet_data_params_valid_not_string")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = 25
+        hdr_row = 1
+        total_row = 1
+        start_row = 1
+        end_row = 1
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_row_not_int(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row is not an integer"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_row_not_int")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = "X"
+        total_row = 2
+        start_row = 3
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_total_row_not_int(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if total_row is not an integer"""
+        print("@test_are_extract_worksheet_data_params_valid_total_row_not_int")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = "X"
+        start_row = 3
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_start_row_not_int(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if start_row is not an integer"""
+        print("@test_are_extract_worksheet_data_params_valid_start_row_not_int")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = "X"
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_end_row_not_int(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if end_row is not an integer"""
+        print("@test_are_extract_worksheet_data_params_valid_end_row_not_int")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 3
+        end_row = "X"
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_row_not_pos(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row is not positive"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_row_not_pos")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = -1
+        total_row = 2
+        start_row = 3
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_total_row_not_pos(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if total_row is not positive"""
+        print("@test_are_extract_worksheet_data_params_valid_total_row_not_pos")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 0
+        start_row = 3
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_start_row_not_pos(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if start_row is not positive"""
+        print("@test_are_extract_worksheet_data_params_valid_start_row_not_pos")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 0
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_end_row_not_pos(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if end_row is not positive"""
+        print("@test_are_extract_worksheet_data_params_valid_end_row_not_pos")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 3
+        end_row = 0
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_num_cols_not_pos(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if num_cols is not positive"""
+        print("@test_are_extract_worksheet_data_params_valid_end_row_not_pos")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 3
+        end_row = 5
+        num_cols = -1
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_start_after_end_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if start_row is after end_row"""
+        print("@test_are_extract_worksheet_data_params_valid_start_after_end_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 4
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_equals_total_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row equals total_row"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_equals_total_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 1
+        start_row = 3
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_equals_start_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row equals start_row"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_equals_start_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 1
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_equals_end_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row equals end_row"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_equals_end_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 3
+        total_row = 2
+        start_row = 1
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_hdr_between_start_and_end_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if hdr_row is between start_row and end_row"""
+        print("@test_are_extract_worksheet_data_params_valid_hdr_equals_end_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 3
+        total_row = 2
+        start_row = 1
+        end_row = 5
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_total_equals_start_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if total_row equals start_row"""
+        print("@test_are_extract_worksheet_data_params_valid_total_equals_start_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 2
+        start_row = 2
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
+
+    def test_are_extract_worksheet_data_params_valid_total_equals_end_row(self):
+        """Check are_extract_worksheet_data_params_valid throws a ValueError if total_row equals end_row"""
+        print("@test_are_extract_worksheet_data_params_valid_total_equals_end_row")
+        # arrange
+        url_str = "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/750709/apprenticeship_starts_tables.xlsx"
+        worksheet = "1A"
+        hdr_row = 1
+        total_row = 3
+        start_row = 2
+        end_row = 3
+        num_cols = 5
+        # act
+        xlsx = XLSXhandler(url_str)
+        xlsx.get_xlsx_from_url()
+        # assert
+        self.assertRaises(ValueError, xlsx.are_extract_worksheet_data_params_valid, worksheet, hdr_row, total_row, start_row, end_row,
+                          num_cols)
 
 # run tests
 if __name__ == '__main__':

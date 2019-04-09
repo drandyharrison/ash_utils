@@ -108,6 +108,63 @@ class XLSXhandler:
         """
         return self.xlsx_data.sheet_names
 
+    def are_extract_worksheet_data_params_valid(self, worksheet:str, hdr_row:int, total_row:int, start_row:int,
+                                                end_row:int, num_cols:int):
+        """Are the parameters for extract_worksheet_data() valid?
+        :param worksheet: str
+            name of the worksheet to process
+        :param hdr_row: int
+            row comtainer the data header/field names
+        :param total_row: int
+            row with totals, -1 if no totals row
+        :param start_row: int
+            first row containing data
+        :param end_row: int
+            last row containing data
+        :param num_col: int
+            number of data columns, column zero is assumed to contain row labels
+        :raises ValueError: when a parameter has an invalid value
+        :return: bool
+            are all the parameters valid
+        """
+        if isinstance(worksheet, str):
+            # check row id parameters: hdr_row, total_row, start_row, end_row
+            attr_vals = [hdr_row, total_row, start_row, end_row, num_cols]
+            attr_names = ["hdr_row", "total_row", "start_row", "end_row", "num_cols"]
+            # check all the attributes are integer and positive (except total_row, which can be -1]
+            for idx, val in enumerate(attr_vals):
+                if not isinstance(attr_vals[idx], int):
+                    raise ValueError(
+                        "@extract_worksheet_data(): {} {} is not integer".format(attr_names[idx], attr_vals[idx]))
+                if idx != 1 and attr_vals[idx] < 0:  # check values are non-negative
+                    raise ValueError(
+                        "@extract_worksheet_data(): {} {} is not positive".format(attr_names[idx], attr_vals[idx]))
+                if idx == 1 and (attr_vals[idx] < -1 or attr_vals[idx] == 0):
+                    raise ValueError(
+                        "@extract_worksheet_data(): {} {} is an invalid value".format(attr_names[idx], attr_vals[idx]))
+            if start_row > end_row:  # check start_row is before end_row
+                raise ValueError(
+                    "@extract_worksheet_data(): end_row {} is before start_row {}".format(end_row, start_row))
+            if hdr_row == total_row:  # check hdr_row and total_row are not the same
+                raise ValueError(
+                    "@extract_worksheet_data(): hdr_row {} matches total_row {}".format(hdr_row, total_row))
+            # check hdr_row does not lie in the range [start_row, end_row] are not the same
+            if hdr_row >= start_row and hdr_row <= end_row:
+                raise ValueError(
+                    "@extract_worksheet_data(): hdr_row {} in range [start_row {}, end_row {}]".format(hdr_row,
+                                                                                                       start_row,
+                                                                                                       end_row))
+            if total_row == start_row:  # check total_row and start_row are not the same
+                raise ValueError(
+                    "@extract_worksheet_data(): total_row {} matches start_row {}".format(total_row, start_row))
+            if total_row == end_row:  # check total_row and end_row are not the same
+                raise ValueError(
+                    "@extract_worksheet_data(): total_row {} matches end_row {}".format(total_row, end_row))
+        else:
+            print("@XLSXhandler.extract_worksheet_data: {} is not a string".format(worksheet))
+            raise ValueError("@XLSXhandler.extract_worksheet_data: {} is not a string".format(worksheet))
+        return True
+
     def extract_worksheet_data(self, worksheet:str, hdr_row:int, total_row:int, start_row:int, end_row:int, num_cols:int):
         """Return the data contents of the worksheet as a ndarray
         :param worksheet: str
@@ -126,37 +183,14 @@ class XLSXhandler:
         :return: ndarray
             contents of the worksheet
         """
-        if isinstance(worksheet, str):
-            # check xlsx_data exists
-                # check the worksheet exists
+        if self.are_extract_worksheet_data_params_valid(worksheet, hdr_row, total_row, start_row, end_row, num_cols):
             try:
+                # check the worksheet exists
                 if worksheet in self.xlsx_data.sheet_names:
                     self.raw_data = self.xlsx_data.parse(worksheet)
                     # rename the columns to contiguous integers, makes access easier
                     for idx, col in enumerate(self.raw_data.columns):
                         self.raw_data.rename(columns={col: idx}, inplace=True)
-                    # check row id parameters: hdr_row, total_row, start_row, end_row
-                    attr_vals = [hdr_row, total_row, start_row, end_row, num_cols]
-                    attr_names = ["hdr_row", "total_row", "start_row", "end_row", "num_cols"]
-                    # check all the attributes are integer and positive (except total_row, which can be -1]
-                    for idx, val in enumerate(attr_vals):
-                        if not isinstance(attr_vals[idx], int):
-                            raise ValueError("@extract_worksheet_data(): {} {} is not integer".format(attr_names[idx], attr_vals[idx]))
-                        if idx != 1 and attr_vals[idx] < 0:  # check values are non-negative
-                            raise ValueError("@extract_worksheet_data(): {} {} is not positive".format(attr_names[idx], attr_vals[idx]))
-                        if idx == 1 and (attr_vals[idx] < -1 or attr_vals[idx] == 0):
-                            raise ValueError("@extract_worksheet_data(): {} {} is an invalid value".format(attr_names[idx], attr_vals[idx]))
-                    if start_row > end_row:             # check start_row is before end_row
-                        raise ValueError("@extract_worksheet_data(): end_row {} is before start_row {}".format(end_row, start_row))
-                    if hdr_row == total_row:            # check hdr_row and total_row are not the same
-                        raise ValueError("@extract_worksheet_data(): hdr_row {} matches total_row {}".format(hdr_row, total_row))
-                    # check hdr_row does not lie in the range [start_row, end_row] are not the same
-                    if hdr_row >= start_row and hdr_row <= end_row:
-                        raise ValueError("@extract_worksheet_data(): hdr_row {} in range [start_row {}, end_row {}]".format(hdr_row, start_row. end_row))
-                    if total_row == start_row:          # check total_row and start_row are not the same
-                        raise ValueError("@extract_worksheet_data(): total_row {} matches start_row {}".format(total_row, start_row))
-                    if total_row == end_row:            # check total_row and end_row are not the same
-                        raise ValueError("@extract_worksheet_data(): total_row {} matches end_row {}".format(total_row, end_row))
                     # get data, labels and totals
                     self.hdr_labels = self.raw_data.loc[hdr_row, 1:num_cols]
                     if total_row > 0:
@@ -171,6 +205,3 @@ class XLSXhandler:
             except AttributeError:
                 print("@XLSXhandler.extract_worksheet_data(): attribute xlsx_data not defined")
                 raise ValueError("@XLSXhandler.extract_worksheet_data(): attribute xlsx_data not defined")
-        else:
-            print("@XLSXhandler.extract_worksheet_data: {} is not a string".format(worksheet))
-            raise ValueError("@XLSXhandler.extract_worksheet_data: {} is not a string".format(worksheet))
