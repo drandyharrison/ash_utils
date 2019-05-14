@@ -17,9 +17,9 @@ class testTimeZone(unittest.TestCase):
         # arrange
         tz = 25
         # act
-        calhndlr = TimeZone()
+        tz_class = TimeZone()
         # assert
-        self.assertRaises(TypeError, calhndlr.is_tz_valid, tz)
+        self.assertRaises(TypeError, tz_class.is_tz_valid, tz)
 
     def test_is_tz_valid_invalid_tz(self):
         """Checks that is_tz_valid returns False for invalid timezone"""
@@ -27,9 +27,9 @@ class testTimeZone(unittest.TestCase):
         # arrange
         tz = "invalid tz"
         # act
-        calhndlr = TimeZone()
+        tz_class = TimeZone()
         # assert
-        self.assertFalse(calhndlr.is_tz_valid(tz))
+        self.assertFalse(tz_class.is_tz_valid(tz))
         print("done")
 
     def test_is_tz_valid_valid_tz(self):
@@ -38,9 +38,20 @@ class testTimeZone(unittest.TestCase):
         # arrange
         tz = "Europe/London"
         # act
-        calhndlr = TimeZone()
+        tz_class = TimeZone()
         # assert
-        self.assertTrue(calhndlr.is_tz_valid(tz))
+        self.assertTrue(tz_class.is_tz_valid(tz))
+
+    def test_is_singleton(self):
+        """Checks TimeZone is a singleton"""
+        print("@test_is_singleton")
+        # arrange
+        tz_class1 = TimeZone()
+        tz_class2 = TimeZone()
+        # act
+        # assert
+        self.assertEquals(id(tz_class1), id(tz_class2))
+
 
 # run tests
 if __name__ == '__main__':

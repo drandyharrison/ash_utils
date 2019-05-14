@@ -126,7 +126,6 @@ class testGoogleCalAPIHandler(unittest.TestCase):
         # assert
         self.assertFalse(calhndlr.add_event(email, event))
 
-
     def test_add_event_end_event_invalid(self):
         """Checks that add_event returns False for invalid event"""
         print("@test_add_event_end_event_invalid")
@@ -149,8 +148,6 @@ class testGoogleCalAPIHandler(unittest.TestCase):
         calhndlr = GoogleCalAPIHandler()
         # assert
         self.assertFalse(calhndlr.add_event(email, event))
-
-
 
     def test_are_add_event_params_valid_email_not_str(self):
         """Checks that are_add_event_params_valid raises TypeError for non-string email address"""
