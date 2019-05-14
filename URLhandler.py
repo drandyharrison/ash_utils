@@ -1,12 +1,13 @@
 import sys
 import validators
-from http.client import OK, FOUND, MOVED_PERMANENTLY
+#from http.client import OK, FOUND, MOVED_PERMANENTLY
+import http.client
 import requests
 
 class URLhandler:
     """Class for handling urls"""
     url = None  # URL to be handled
-    good_codes = [OK, FOUND, MOVED_PERMANENTLY]
+    good_codes = [http.client.OK, http.client.FOUND, http.client.MOVED_PERMANENTLY]
 
     # constructor methods
     def __init__(self):

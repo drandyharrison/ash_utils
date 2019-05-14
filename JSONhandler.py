@@ -17,7 +17,6 @@ class JSONhandler:
         :raises ValueError: if fname is not a string
         """
         if isinstance(fname, str):
-            # the name of the URL to be processed
             self.fname = fname
         else:
             raise ValueError("@URLhandler creator: {} is not a string".format(fname))

@@ -2,7 +2,7 @@ import sys
 import os
 import xlrd
 import pandas as pd
-from urllib.request import urlopen
+import urllib.request
 import requests
 from URLhandler import URLhandler
 
@@ -55,7 +55,7 @@ class XLSXhandler:
             del urlhndlr    # delete as soon as no longer needed
             # open url
             try:
-                socket = urlopen(self.fname)
+                socket = urllib.request.urlopen(self.fname)
             except requests.exceptions.ConnectionError as e:
                 print("@XLSXhandler.get_xlsx_from_url() Connection error for {}".format(self.fname))
                 self.xlsx_data = None
