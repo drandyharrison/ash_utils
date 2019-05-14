@@ -1,8 +1,8 @@
 import csv
-import ash_singleton
+from ash_singleton import singleton
 
 # add decorator to make a singleton class
-@ash_singleton.singleton
+@singleton
 class TimeZone:
     """Class for storing and querying a list of time zones"""
     # TODO need to include a reference to the source
