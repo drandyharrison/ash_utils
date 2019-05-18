@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from validate_email import validate_email
-from TimeZone import TimeZone
+import TimeZone
 from ash_singleton import singleton
 
 # add decorator to make a singleton class
@@ -22,7 +22,7 @@ class GoogleCalAPIHandler:
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
     service = None
-    tzReader = TimeZone()
+    tzReader = TimeZone.TimeZone()
 
     # constructor methods
     def __init__(self, readonly : bool = True):
