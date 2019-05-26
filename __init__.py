@@ -6,3 +6,4 @@ from replace_nonnumeric import replace_nonnumeric
 from TimeZone import TimeZone
 from URLhandler import URLhandler
 from XLSXhandler import XLSXhandler
+from GarminHandler import GarminHandler
