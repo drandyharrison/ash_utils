@@ -19,6 +19,7 @@ class GarminHandler:
 
     # constructor methods
     def __init__(self, gcf55_config: str):
+        assert (isinstance(gcf55_config, str))
         # read config from a JSON
         jsonhndlr = ash_utils.JSONhandler(gcf55_config)
         if jsonhndlr.read_json():
@@ -58,7 +59,7 @@ class GarminHandler:
         :return: datetime
             Date parsed
         """
-
+        assert (isinstance(d, str))
         d = str(d).strip()  # discard jibberish
         return datetime.strptime(d, "%Y-%m-%d")
 
@@ -80,7 +81,11 @@ class GarminHandler:
         :return: bool
             True iff args are correct
         """
-
+        assert (isinstance(user, str))
+        assert (isinstance(password, str))
+        assert (isinstance(url, str))
+        assert (isinstance(chromedriver, str))
+        assert (isinstance(out_dir, str))
         assert (len(user) > 1)
         assert (len(password) > 1)
         assert ("https" in url and "garmin" in url)
