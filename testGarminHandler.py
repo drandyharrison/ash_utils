@@ -1,5 +1,5 @@
 import unittest
-from GarminHandler import GarminHandler
+import GarminHandler
 
 
 class testGarminHandler(unittest.TestCase):
