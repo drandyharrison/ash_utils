@@ -1,7 +1,7 @@
 import unittest
 from JSONhandler import JSONhandler
 
-class testURLhandler(unittest.TestCase):
+class testJSONhandler(unittest.TestCase):
     def SetUp(self):
         """set-up code, which is called before each test, to avoid repetition"""
         pass
