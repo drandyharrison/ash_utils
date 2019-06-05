@@ -19,10 +19,10 @@ class GoogleCalAPIHandler:
     # members
     # If modifying these scopes, delete the file token.pickle.
     #SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-    SCOPES = ['https://www.googleapis.com/auth/calendar']
-    creds = None
-    service = None
-    tzReader = TimeZone.TimeZone()
+    __SCOPES = ['https://www.googleapis.com/auth/calendar']
+    __creds = None
+    __service = None
+    __tzReader = TimeZone.TimeZone()
 
     # constructor methods
     def __init__(self, readonly : bool = True):
@@ -35,19 +35,19 @@ class GoogleCalAPIHandler:
         # time.
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:
-                self.creds = pickle.load(token)
+                self.__creds = pickle.load(token)
         # If there are no (valid) credentials available, let the user log in.
-        if not self.creds or not self.creds.valid:
-            if self.creds and self.creds.expired and self.creds.refresh_token:
-                self.creds.refresh(Request())
+        if not self.__creds or not self.__creds.valid:
+            if self.__creds and self.__creds.expired and self.__creds.refresh_token:
+                self.__creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', self.SCOPES)
-                self.creds = flow.run_local_server()
+                    'credentials.json', self.__SCOPES)
+                self.__creds = flow.run_local_server()
             # Save the credentials for the next run
             with open('token.pickle', 'wb') as token:
-                pickle.dump(self.creds, token)
-        self.service = build('calendar', 'v3', credentials=self.creds)
+                pickle.dump(self.__creds, token)
+        self.__service = build('calendar', 'v3', credentials=self.__creds)
 
     # destructor method
     def __del__(self):
@@ -62,7 +62,7 @@ class GoogleCalAPIHandler:
         # Call the Calendar API
         now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
         print('Getting the upcoming {} events'.format(n))
-        events_result = self.service.events().list(calendarId='primary', timeMin=now,
+        events_result = self.__service.events().list(calendarId='primary', timeMin=now,
                                             maxResults=n, singleEvents=True,
                                             orderBy='startTime').execute()
         events = events_result.get('items', [])
@@ -104,8 +104,8 @@ class GoogleCalAPIHandler:
         if self.are_add_event_params_valid(email, event):
             # no check as to whether email exists
             try:
-                success = self.tzReader.is_tz_valid(event['start']['timeZone']) and\
-                          self.tzReader.is_tz_valid(event['end']['timeZone'])
+                success = self.__tzReader.is_tz_valid(event['start']['timeZone']) and\
+                          self.__tzReader.is_tz_valid(event['end']['timeZone'])
                 if not success:
                     print("Time zone invalid\n\tstart: {}\nend: {}".format(event['start']['timeZone'], event['end']['timeZone']))
             except:
@@ -113,7 +113,7 @@ class GoogleCalAPIHandler:
                 success = False
             if success:
                 try:
-                    event = self.service.events().insert(calendarId=email, body=event).execute()
+                    event = self.__service.events().insert(calendarId=email, body=event).execute()
                 except:
                     print("@GoogleCalAPIHandler Unexpected error:", sys.exc_info()[0])
                     success = False

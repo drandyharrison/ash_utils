@@ -9,10 +9,10 @@ from URLhandler import URLhandler
 class XLSXhandler:
     """Class for handling Excel files"""
     # members
-    fname = None        # name of the 'file' containing the Excel document
-    xlsx_data = None    # holds the Excel worksheets
-    raw_data = None     # raw data from Excel worksheet being processed
-    data = None         # data from worksheet to be processed
+    __fname = None        # name of the 'file' containing the Excel document
+    __xlsx_data = None    # holds the Excel worksheets
+    __raw_data = None     # raw data from Excel worksheet being processed
+    __data = None         # data from worksheet to be processed
 
     # constructor methods
     def __init__(self):
@@ -30,13 +30,13 @@ class XLSXhandler:
                 raise ValueError("@XLSXhandler creator: {} is blank".format(fname))
             else:
                 # the name of the Excel file to be processed - can be a filename, full path, url etc.
-                self.fname = fname
+                self.__fname = fname
         else:
             raise ValueError("@XLSXhandler creator: {} is not a string".format(fname))
 
     # destructor method
     def __del__(self):
-        print("{} [{}] died".format(self.__class__.__name__, self.fname))
+        print("{} [{}] died".format(self.__class__.__name__, self.__fname))
 
     def get_xlsx_from_url(self):
         """Read an Excel workbook from a url and points to a valid Excel workbook
@@ -46,7 +46,7 @@ class XLSXhandler:
         """
         try:
             # create URLhandler
-            urlhndlr = URLhandler(self.fname)
+            urlhndlr = URLhandler(self.__fname)
         except ValueError as e:
             print("@XLSXhandler: ValueError - {}".format(e))
             return False
@@ -55,48 +55,48 @@ class XLSXhandler:
             del urlhndlr    # delete as soon as no longer needed
             # open url
             try:
-                socket = urllib.request.urlopen(self.fname)
+                socket = urllib.request.urlopen(self.__fname)
             except requests.exceptions.ConnectionError as e:
-                print("@XLSXhandler.get_xlsx_from_url() Connection error for {}".format(self.fname))
-                self.xlsx_data = None
+                print("@XLSXhandler.get_xlsx_from_url() Connection error for {}".format(self.__fname))
+                self.__xlsx_data = None
                 return False
             except:
                 print("@XLSXhandler.get_xlsx_from_url() Unexpected error:", sys.exc_info()[0])
-                self.xlsx_data = None
+                self.__xlsx_data = None
                 return False
             # get Excel workbook
             try:
-                self.xlsx_data = pd.ExcelFile(socket)
+                self.__xlsx_data = pd.ExcelFile(socket)
             except xlrd.biffh.XLRDError as e:
-                print("@XLSXhandler.get_xlsx_from_url() Not an xlsx file: {}".format(self.fname))
-                self.xlsx_data = None
+                print("@XLSXhandler.get_xlsx_from_url() Not an xlsx file: {}".format(self.__fname))
+                self.__xlsx_data = None
                 return False
             else:
                 return True
         else:
             del urlhndlr
-            print("@XLSXhandler.get_xlsx_from_url() URL doesn't exist: {}".format(self.fname))
-            self.xlsx_data = None
+            print("@XLSXhandler.get_xlsx_from_url() URL doesn't exist: {}".format(self.__fname))
+            self.__xlsx_data = None
             return False
 
     def get_xlsx_from_file(self):
         """Read an Excel workbook from a file and points to a valid Excel workbook
-        contents of the workbook are loaded into the panda dataframe self.xlsx_data
+        contents of the workbook are loaded into the panda dataframe self.__xlsx_data
         :return: bool
             is file is valid?
         """
-        if os.path.isdir(self.fname):
-            print("@XLSXhandler.get_xlsx_from_file() file is a directory: {}".format(self.fname))
+        if os.path.isdir(self.__fname):
+            print("@XLSXhandler.get_xlsx_from_file() file is a directory: {}".format(self.__fname))
             return False
         try:
-            self.xlsx_data = pd.ExcelFile(self.fname)
+            self.__xlsx_data = pd.ExcelFile(self.__fname)
         except FileNotFoundError as e:
-            print("@XLSXhandler.get_xlsx_from_file() file not found: {}".format(self.fname))
-            self.xlsx_data = None
+            print("@XLSXhandler.get_xlsx_from_file() file not found: {}".format(self.__fname))
+            self.__xlsx_data = None
             return False
         except xlrd.biffh.XLRDError as e:
-            print("@XLSXhandler.get_xlsx_from_file() Not an xlsx file: {}".format(self.fname))
-            self.xlsx_data = None
+            print("@XLSXhandler.get_xlsx_from_file() Not an xlsx file: {}".format(self.__fname))
+            self.__xlsx_data = None
             return False
         else:
             return True
@@ -106,7 +106,7 @@ class XLSXhandler:
         :return: list
             list of sheet names
         """
-        return self.xlsx_data.sheet_names
+        return self.__xlsx_data.sheet_names
 
     def are_extract_worksheet_data_params_valid(self, worksheet:str, hdr_row:int, total_row:int, start_row:int,
                                                 end_row:int, num_cols:int):
@@ -186,19 +186,18 @@ class XLSXhandler:
         if self.are_extract_worksheet_data_params_valid(worksheet, hdr_row, total_row, start_row, end_row, num_cols):
             try:
                 # check the worksheet exists
-                if worksheet in self.xlsx_data.sheet_names:
-                    self.raw_data = self.xlsx_data.parse(worksheet)
+                if worksheet in self.__xlsx_data.sheet_names:
+                    self.__raw_data = self.__xlsx_data.parse(worksheet)
                     # rename the columns to contiguous integers, makes access easier
-                    for idx, col in enumerate(self.raw_data.columns):
-                        self.raw_data.rename(columns={col: idx}, inplace=True)
+                    for idx, col in enumerate(self.__raw_data.columns):
+                        self.__raw_data.rename(columns={col: idx}, inplace=True)
                     # get data, labels and totals
-                    self.hdr_labels = self.raw_data.loc[hdr_row, 1:num_cols]
+                    self.__hdr_labels = self.__raw_data.loc[hdr_row, 1:num_cols]
                     if total_row > 0:
-                        self.totals = self.raw_data.loc[total_row, 1:num_cols].values
-                    self.row_labels = self.raw_data.loc[start_row:end_row, 0]
+                        self.__totals = self.__raw_data.loc[total_row, 1:num_cols].values
+                    self.__row_labels = self.__raw_data.loc[start_row:end_row, 0]
                     # self.data is a numpy.ndarray
-                    self.data = self.raw_data.loc[start_row:end_row, 1:num_cols].values
-                    # print(type(self.totals))
+                    self.__data = self.__raw_data.loc[start_row:end_row, 1:num_cols].values
                 else:
                     print("@XLSXhandler.extract_worksheet_data: worksheet {} is not in workbook".format(worksheet))
                     raise ValueError("@XLSXhandler.extract_worksheet_data: worksheet {} is not in workbook".format(worksheet))

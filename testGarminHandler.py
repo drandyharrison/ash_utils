@@ -11,6 +11,7 @@ class testGarminHandler(unittest.TestCase):
         """code to tidy up after each test"""
         pass
 
+    # TODO add in unit test for str2bool()
 
 # run tests
 if __name__ == '__main__':
