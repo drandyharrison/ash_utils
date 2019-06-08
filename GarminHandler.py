@@ -1,6 +1,7 @@
 import os
 import ast
-import JSONhandler
+import yaml
+#import JSONhandler
 from datetime import datetime
 from pygce.models.bot import GarminConnectBot
 
@@ -20,28 +21,27 @@ class GarminHandler:
     # constructor methods
     def __init__(self, gcf55_config: str):
         assert (isinstance(gcf55_config, str))
-        # read config from a JSON
-        jsonhndlr = ash_utils.JSONhandler(gcf55_config)
-        if jsonhndlr.read_json():
-            # read key values from config file (and cast as necessary)
-            self.__user = jsonhndlr.get_val('user')
-            self.__password = jsonhndlr.get_val('password')
-            self.__chromedriver = jsonhndlr.get_val('chromedriver')
-            # ast.literal_eval() converts a string representation of a list into a list
-            self.__days = ast.literal_eval(jsonhndlr.get_val('days'))
-            assert (2 == len(days))
-            self.__days = list(map(parse_yyyy_mm_dd, days))
-            self.__url = jsonhndlr.get_val('url')
-            self.__out_dir = jsonhndlr.get_val('out_dir')
-            self.__format_out = jsonhndlr.get_val('format_out')
-            # convert to bool
-            self.__download_gpx = str2bool(jsonhndlr.get_val('download_gpx'))
+        # read config from YAML
+        with open(gcf55_config, 'r') as fstream:
+            yaml_config = yaml.safe_load(fstream)
+        # read key values from config file (and cast as necessary)
+        self.__user = yaml_config['user']
+        self.__password = yaml_config['password']
+        self.__chromedriver = yaml_config['chromedriver']
+        # ast.literal_eval() converts a string representation of a list into a list
+        self.__days = ast.literal_eval(yaml_config['days'])
+        assert (2 == len(self.__days))
+        self.__days = [self.parse_yyyy_mm_dd(d) for d in self.__days]
+        self.__url = yaml_config['url']
+        self.__out_dir = yaml_config['out_dir']
+        self.__format_out = yaml_config['format_out']
+        self.__download_gpx = self.str2bool(yaml_config['download_gpx'])
 
     # destructor method
     def __del__(self):
         print("{} [{}] died".format(self.__class__.__name__, self.__fname))
 
-    def str2bool(v: str):
+    def str2bool(self, v: str):
         """
         :param v: str
             boolean value
@@ -52,7 +52,7 @@ class GarminHandler:
         return v.lower() in ("yes", "true", "t", "1")
 
 
-    def parse_yyyy_mm_dd(d):
+    def parse_yyyy_mm_dd(self, d):
         """
         :param d: str
             Date in the form yyyy-mm-dd to parse
@@ -64,7 +64,7 @@ class GarminHandler:
         return datetime.strptime(d, "%Y-%m-%d")
 
     # TODO remove clash between argument names and class members
-    def check_args(user, password, url, chromedriver, days, out_dir):
+    def check_args(self, user, password, url, chromedriver, days, out_dir):
         """
         :param user: str
             User to use
@@ -99,8 +99,7 @@ class GarminHandler:
 
         return True
 
-
-    def get_gc_data():
+    def get_gc_data(self):
         """
         Read data from API
         :param user: str
@@ -123,7 +122,7 @@ class GarminHandler:
             True iff args are correct
         """
 
-        if check_args(self.__user, self.__password, self.__url, self.__chromedriver, self.__days, self.__out_dir):
+        if self.check_args(self.__user, self.__password, self.__url, self.__chromedriver, self.__days, self.__out_dir):
             bot = GarminConnectBot(self.__user, self.__password, self.__download_gpx, self.__chromedriver,
                                    url=self.__url)
 
