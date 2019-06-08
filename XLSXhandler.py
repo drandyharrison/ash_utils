@@ -13,6 +13,9 @@ class XLSXhandler:
     __xlsx_data = None    # holds the Excel worksheets
     __raw_data = None     # raw data from Excel worksheet being processed
     __data = None         # data from worksheet to be processed
+    __hdr_labels = None
+    __totals = None
+    __row_labels = None
 
     # constructor methods
     def __init__(self):
@@ -180,27 +183,56 @@ class XLSXhandler:
         :param num_col: int
             number of data columns, column zero is assumed to contain row labels
         :raises ValueError: when a parameter has an invalid value
-        :return: ndarray
-            contents of the worksheet
         """
         if self.are_extract_worksheet_data_params_valid(worksheet, hdr_row, total_row, start_row, end_row, num_cols):
             try:
                 # check the worksheet exists
                 if worksheet in self.__xlsx_data.sheet_names:
-                    self.__raw_data = self.__xlsx_data.parse(worksheet)
-                    # rename the columns to contiguous integers, makes access easier
-                    for idx, col in enumerate(self.__raw_data.columns):
-                        self.__raw_data.rename(columns={col: idx}, inplace=True)
-                    # get data, labels and totals
-                    self.__hdr_labels = self.__raw_data.loc[hdr_row, 1:num_cols]
-                    if total_row > 0:
-                        self.__totals = self.__raw_data.loc[total_row, 1:num_cols].values
-                    self.__row_labels = self.__raw_data.loc[start_row:end_row, 0]
-                    # self.data is a numpy.ndarray
-                    self.__data = self.__raw_data.loc[start_row:end_row, 1:num_cols].values
+                    self.__raw_data = self.__xlsx_data.parse(worksheet, header=0, skiprows=hdr_row-1, index_col=0,
+                                                             na_values='*', parse_cols=num_cols)
+                    # account for skipped rows in row indices
+                    hdr_row += 1    # +1 as row after the header row becomes row 0
+                    [total_row, start_row, end_row] = map(lambda x: x - hdr_row, [total_row, start_row, end_row])
+                    self.__hdr_labels = self.__raw_data.columns
+                    # only read total row if one is defined
+                    if total_row >= 0:
+                        self.__totals = self.__raw_data.iloc[total_row, :].values
+                    self.__row_labels = self.__raw_data.index.values[start_row:end_row]
+                    self.__data = self.__raw_data.iloc[start_row:end_row, :].values
                 else:
                     print("@XLSXhandler.extract_worksheet_data: worksheet {} is not in workbook".format(worksheet))
                     raise ValueError("@XLSXhandler.extract_worksheet_data: worksheet {} is not in workbook".format(worksheet))
             except AttributeError:
                 print("@XLSXhandler.extract_worksheet_data(): attribute xlsx_data not defined")
                 raise ValueError("@XLSXhandler.extract_worksheet_data(): attribute xlsx_data not defined")
+
+
+    def get_row_labels(self):
+        """Access method to value of __row_labels
+        :return: list of str
+            contents of __row_labels
+        """
+        return self.__row_labels
+
+    def get_num_cols(self):
+        """Access method to get number of columns in data
+        :return: int
+            number of columns in data"""
+        return self.__data.shape[1]
+
+    def get_num_rows(self):
+        """Access method to get number of rows in data
+        :return: int
+            number of rows in data"""
+        return self.__data.shape[0]
+
+    def get_col_val(self, col_index:int):
+        """Access method to column of data
+        :param col_index : int
+            index of column of data to return
+        :return: list of float
+            defined coliumn
+        """
+        # TODO check column index is valid
+        assert(0 <= col_index <= self.get_num_cols())
+        return self.__data[:, col_index]
