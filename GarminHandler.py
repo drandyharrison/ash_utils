@@ -7,8 +7,9 @@ from pygce.models.bot import GarminConnectBot
 
 class GarminHandler:
     """Class for connecting to Garmin Forerunner API"""
-    # members
+    # constants
     __AVAILABLE_OUTPUT_FORMATS = ["json", "csv"]
+    # members
     __user = None
     __password = None
     __chromedriver = None
@@ -20,7 +21,8 @@ class GarminHandler:
 
     # constructor methods
     def __init__(self, gcf55_config: str):
-        assert (isinstance(gcf55_config, str))
+        if not(isinstance(gcf55_config, str)):
+            raise TypeError("@creator: {} is not a string".format(gcf55_config))
         # read config from YAML
         with open(gcf55_config, 'r') as fstream:
             yaml_config = yaml.safe_load(fstream)
@@ -39,7 +41,7 @@ class GarminHandler:
 
     # destructor method
     def __del__(self):
-        print("{} [{}] died".format(self.__class__.__name__, self.__fname))
+        print("{} [{}] died".format(self.__class__.__name__, self.__user))
 
     def str2bool(self, v: str):
         """
@@ -48,7 +50,8 @@ class GarminHandler:
         :return: bool
             True if string holds a true value; otherwise False
         """
-        assert(isinstance(v, str))
+        if not(isinstance(v, str)):
+            raise TypeError("@str2bool() {} is not a string".format(v))
         return v.lower() in ("yes", "true", "t", "1")
 
 
