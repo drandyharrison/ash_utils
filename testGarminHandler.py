@@ -92,11 +92,17 @@ class testGarminHandler(unittest.TestCase):
         date_str = "2019-07-01"
         # act
         gh = GarminHandler("gcf55_config.yml")
-        dt = gh.parse_yyyy_mm_dd(date_str)
         # assert
-        self.assertTrue(isinstance(dt, datetime.datetime))
+        self.assertTrue(isinstance(gh.parse_yyyy_mm_dd(date_str), datetime.datetime))
 
-    # TODO check Throws error if passed a valid date string but not in the correct format
+    def test_parse_yyyy_mm_dd_invalid_date_format(self):
+        """Test parse_yyyy_mm_dd returns None if passed a valid date string but not in the expected format"""
+        # arrange
+        date_str = "01/07/2019"
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        # assert
+        self.assertIsNone(gh.parse_yyyy_mm_dd(date_str))
 
     def test_parse_yyyy_mm_dd_not_valid_date(self):
         """Test parse_yyyy_mm_dd returns None when passed a string that is not a valid data"""
