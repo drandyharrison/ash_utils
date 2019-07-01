@@ -1,4 +1,5 @@
 import os
+import sys
 import ast
 import yaml
 #import JSONhandler
@@ -62,9 +63,15 @@ class GarminHandler:
         :return: datetime
             Date parsed
         """
-        assert (isinstance(d, str))
+        if not(isinstance(d, str)):
+            raise TypeError("@parse_yyyy_mm_dd {} is not a string".format(d))
         d = str(d).strip()  # discard jibberish
-        return datetime.strptime(d, "%Y-%m-%d")
+        try:
+            dt = datetime.strptime(d, "%Y-%m-%d")
+        except ValueError as e:
+            print("@parse_yyyy_mm_dd {} is not a valid format".format(d))
+            dt = None
+        return dt
 
     # TODO remove clash between argument names and class members
     def check_args(self, user, password, url, chromedriver, days, out_dir):

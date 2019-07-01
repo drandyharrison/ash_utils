@@ -1,6 +1,6 @@
 import unittest
 from GarminHandler import GarminHandler
-
+import datetime
 
 class testGarminHandler(unittest.TestCase):
     def SetUp(self):
@@ -57,7 +57,6 @@ class testGarminHandler(unittest.TestCase):
         self.assertTrue(gh.str2bool(true_bool_str6))
         self.assertTrue(gh.str2bool(true_bool_str7))
 
-
     def test_str2bool_str_false_bool(self):
         """Test str2bool returns true when passed a string that represents a false value"""
         # arrange
@@ -79,7 +78,35 @@ class testGarminHandler(unittest.TestCase):
         self.assertFalse(gh.str2bool(false_bool_str6))
         self.assertFalse(gh.str2bool(false_bool_str7))
 
-    # TODO test parse_yyyy_mm_dd()
+    def test_parse_yyyy_mm_dd_not_str(self):
+        """Test parse_yyyy_mm_dd throws a TypeError when passed a non-string"""
+        # arrange
+        not_str = 25
+        # act
+        # assert
+        self.assertRaises(TypeError, GarminHandler.parse_yyyy_mm_dd, not_str)
+
+    def test_parse_yyyy_mm_dd_valid_date(self):
+        """Test parse_yyyy_mm_dd returns the correct datetime if passed a valid date string"""
+        # arrange
+        date_str = "2019-07-01"
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        dt = gh.parse_yyyy_mm_dd(date_str)
+        # assert
+        self.assertTrue(isinstance(dt, datetime.datetime))
+
+    # TODO check Throws error if passed a valid date string but not in the correct format
+
+    def test_parse_yyyy_mm_dd_not_valid_date(self):
+        """Test parse_yyyy_mm_dd returns None when passed a string that is not a valid data"""
+        # arrange
+        gibberish = "gibberish"
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        # assert
+        self.assertIsNone(gh.parse_yyyy_mm_dd(gibberish))
+
     # TODO test check_args
 
 # run tests
