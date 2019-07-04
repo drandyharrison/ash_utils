@@ -1,6 +1,7 @@
 import unittest
 from GarminHandler import GarminHandler
 import datetime
+import ast
 
 class testGarminHandler(unittest.TestCase):
     def SetUp(self):
@@ -16,7 +17,7 @@ class testGarminHandler(unittest.TestCase):
         # arrange
         url_int = 25
         # act
-        # assert
+        # # TODO
         self.assertRaises(TypeError, GarminHandler, url_int)
 
     def test_str2bool_not_str(self):
@@ -113,7 +114,238 @@ class testGarminHandler(unittest.TestCase):
         # assert
         self.assertIsNone(gh.parse_yyyy_mm_dd(gibberish))
 
-    # TODO test check_args
+    def test_check_args_user_not_str(self):
+        """Test check_args throws AssertionError when argument user is not a string"""
+        # arrange
+        user = 25.6
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_password_not_str(self):
+        """Test check_args throws AssertionError when argument password is not a string"""
+        # arrange
+        user = "name@domain.com"
+        password = 12.3
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_url_not_str(self):
+        """Test check_args throws AssertionError when argument url is not a string"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = 35
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_chromedriver_not_str(self):
+        """Test check_args throws AssertionError when argument chromedriver is not a string"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = 35
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_out_dir_not_str(self):
+        """Test check_args throws AssertionError when argument out_dir is not a string"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = 84.235
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_user_empty(self):
+        """Test check_args throws AssertionError when argument user is empty"""
+        # arrange
+        user = ""
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_password_empty(self):
+        """Test check_args throws AssertionError when argument password is empty"""
+        # arrange
+        user = "name@domain.com"
+        password = ""
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_url_invalid(self):
+        """Test check_args throws AssertionError when argument url is invalid"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        # "https" not in url and "garmin" not in url
+        url1 = "http://connect.xxx.com/signin/"
+        # "https" not in url and "garmin" in url
+        url2 = "http://connect.garmin.com/signin/"
+        # "https" in url and "garmin" not in url
+        url3 = "https://connect.xxx.com/signin/"
+        # TODO invalid url; e.g "htp:/ccc.dd.ee/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url1, chromedriver, days, out_dir)
+        self.assertRaises(AssertionError, gh.check_args, user, password, url2, chromedriver, days, out_dir)
+        self.assertRaises(AssertionError, gh.check_args, user, password, url3, chromedriver, days, out_dir)
+
+    # TODO chromedriver path does not exist
+    def test_check_args_chromedriver_path_invalid(self):
+        """Test check_args throws AssertionError when argument chromedriver is an invalid"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/me/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_not_two_days(self):
+        """Test check_args throws AssertionError when argument days has more than two days"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14', '2019-05-12']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_days_not_datetime(self):
+        """Test check_args throws AssertionError when argument days is not a list of valid datetime value strings"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days1 = ast.literal_eval("['19-04-14', '2019-04-14']")
+        days2 = ast.literal_eval("['2019-04-14', '2019-04-34']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days1 = [gh.parse_yyyy_mm_dd(d) for d in days1]
+        days2 = [gh.parse_yyyy_mm_dd(d) for d in days2]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days1, out_dir)
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days2, out_dir)
+
+    def test_check_args_days_not_seq(self):
+        """Test check_args XXX"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-24', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertRaises(AssertionError, gh.check_args, user, password, url, chromedriver, days, out_dir)
+
+    def test_check_args_all_valid(self):
+        """Test check_args returns true when all arguments are valid"""
+        # arrange
+        user = "name@domain.com"
+        password = "password"
+        chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
+        days = ast.literal_eval("['2019-04-14', '2019-04-14']")
+        url = "https://connect.garmin.com/signin/"
+        out_dir = "./mygarmin//"
+        format_out = "csv"
+        download_gpx = False
+        # act
+        gh = GarminHandler("gcf55_config.yml")
+        days = [gh.parse_yyyy_mm_dd(d) for d in days]
+        # assert
+        self.assertTrue(gh.check_args(user, password, url, chromedriver, days, out_dir))
 
 # run tests
 if __name__ == '__main__':
