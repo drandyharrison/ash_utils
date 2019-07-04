@@ -12,3 +12,7 @@ zone1970\.tab
 models/
 
 gcf55_config\.yml
+
+\.coverage
+
+htmlcov/

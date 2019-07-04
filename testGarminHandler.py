@@ -25,8 +25,9 @@ class testGarminHandler(unittest.TestCase):
         # arrange
         bool_int = 25
         # act
+        gh = GarminHandler("gcf55_config.yml")
         # assert
-        self.assertRaises(TypeError, GarminHandler.str2bool, bool_int)
+        self.assertRaises(TypeError, gh.str2bool, bool_int)
 
     def test_str2bool_str_not_bool(self):
         """Test str2bool returns false when passed a non-boolean string"""
@@ -84,8 +85,9 @@ class testGarminHandler(unittest.TestCase):
         # arrange
         not_str = 25
         # act
+        gh = GarminHandler("gcf55_config.yml")
         # assert
-        self.assertRaises(TypeError, GarminHandler.parse_yyyy_mm_dd, not_str)
+        self.assertRaises(TypeError, gh.parse_yyyy_mm_dd, not_str)
 
     def test_parse_yyyy_mm_dd_valid_date(self):
         """Test parse_yyyy_mm_dd returns the correct datetime if passed a valid date string"""
@@ -338,7 +340,7 @@ class testGarminHandler(unittest.TestCase):
         chromedriver = "C:/Users/iaman/AppData/Local/Programs/Python/Python37/chromedriver-Windows"
         days = ast.literal_eval("['2019-04-14', '2019-04-14']")
         url = "https://connect.garmin.com/signin/"
-        out_dir = "./mygarmin//"
+        out_dir = "./mygarmin_all//"
         format_out = "csv"
         download_gpx = False
         # act
