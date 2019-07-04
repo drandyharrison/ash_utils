@@ -17,7 +17,7 @@ class testGarminHandler(unittest.TestCase):
         # arrange
         url_int = 25
         # act
-        # # TODO
+        # assert
         self.assertRaises(TypeError, GarminHandler, url_int)
 
     def test_str2bool_not_str(self):
@@ -248,7 +248,8 @@ class testGarminHandler(unittest.TestCase):
         url2 = "http://connect.garmin.com/signin/"
         # "https" in url and "garmin" not in url
         url3 = "https://connect.xxx.com/signin/"
-        # TODO invalid url; e.g "htp:/ccc.dd.ee/"
+        # invalid url
+        url4 = "htp:/ccc.dd.ee/"
         out_dir = "./mygarmin//"
         format_out = "csv"
         download_gpx = False
@@ -259,8 +260,8 @@ class testGarminHandler(unittest.TestCase):
         self.assertRaises(AssertionError, gh.check_args, user, password, url1, chromedriver, days, out_dir)
         self.assertRaises(AssertionError, gh.check_args, user, password, url2, chromedriver, days, out_dir)
         self.assertRaises(AssertionError, gh.check_args, user, password, url3, chromedriver, days, out_dir)
+        self.assertRaises(AssertionError, gh.check_args, user, password, url4, chromedriver, days, out_dir)
 
-    # TODO chromedriver path does not exist
     def test_check_args_chromedriver_path_invalid(self):
         """Test check_args throws AssertionError when argument chromedriver is an invalid"""
         # arrange
