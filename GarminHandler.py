@@ -73,39 +73,39 @@ class GarminHandler:
             dt = None
         return dt
 
-    # TODO remove clash between argument names and class members
-    def check_args(self, user, password, url, chromedriver, days, out_dir):
+    def check_args(self, user_, password_, url_, chromedriver_, days_, out_dir_):
         """
-        :param user: str
+        :param user_: str
             User to use
-        :param password: str
+        :param password_: str
             Password to use
-        :param url: str
+        :param url_: str
             Url to connect to
-        :param chromedriver: str
+        :param chromedriver_: str
             Path to chromedriver to use
-        :param days: [] of datetime.date
+        :param days_: [] of datetime.date
             Days to save
-        :param out_dir: str
+        :param out_dir_: str
             Directory to write to with output
         :return: bool
             True iff args are correct
         """
-        assert (isinstance(user, str))
-        assert (isinstance(password, str))
-        assert (isinstance(url, str))
-        assert (isinstance(chromedriver, str))
-        assert (isinstance(out_dir, str))
-        assert (len(user) > 1)
-        assert (len(password) > 1)
-        assert ("https" in url and "garmin" in url)
-        assert (os.path.exists(chromedriver))
-        assert (2 == len(days))
-        assert (isinstance(days[0], datetime))
-        assert (days[0] <= days[1])  # start day <= end day
+        assert isinstance(user_, str), "@check_args: user {} is not a string".format(user_)
+        assert isinstance(password_, str), "@check_args: password {} is not a string".format(password_)
+        assert isinstance(url_, str), "@check_args: url {} is not a string".format(url_)
+        assert isinstance(chromedriver_, str), "@check_args: chromedriver {} is not a string".format(chromedriver_)
+        assert isinstance(out_dir_, str), "@check_args: out_dir {} is not a string".format(out_dir_)
+        assert len(user_) > 1, "@check_args: : user {} is empty".format(user_)
+        assert len(password_) > 1, "@check_args: : password {} is empty".format(password_)
+        assert "https" in url_ and "garmin" in url_, "@check_args: url {} is not valid".format(url_)
+        assert os.path.exists(chromedriver_), "@check_args: chromedriver {} does not exist".format(chromedriver_)
+        assert 2 == len(days_), "@check_args: not two days"
+        assert isinstance(days_[0], datetime), "@check_args: days[0] {} is not valid datetime".format(days_[0])
+        assert isinstance(days_[1], datetime), "@check_args: days[1] {} is not valid datetime".format(days_[1])
+        assert days_[0] <= days_[1], "@check_args: start day {} after end day {}".format(days_[0], days_[1])
 
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)  # create necessary dir for output file
+        if not os.path.exists(out_dir_):
+            os.makedirs(out_dir_)  # create necessary dir for output file
 
         return True
 
