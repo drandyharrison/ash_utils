@@ -6,8 +6,10 @@ from sqlalchemy import create_engine
 class sqliteHandler:
     """Class for handling the sqlite databases"""
     # members
+    # TODO pass sqlite name to constructor and make engine a class member - no longer singleton
 
     # constructor methods
+    def __init__(self):
         pass
 
     # destructor method
@@ -28,4 +30,16 @@ class sqliteHandler:
         engine = create_engine("sqlite:///"+db_name)
         csv_df.to_sql('mpg', engine, if_exists='append', index=False)
 
-# TODO query contents of the database, as a check
+
+    def sqlite_to_df(db_name: str, table_name: str):
+        """Populate Dataframe from a table in a SQlite database
+        :param db_name: str
+            name of database to read from
+        :param table_name: str
+            name of table to populate the DataFrame from
+        """
+        engine = create_engine("sqlite:///" + db_name)
+        df = pd.read_sql("SELECT * FROM " + table_name, engine)
+        # also see read_sql_query() and read_sql_table()
+
+        return df
