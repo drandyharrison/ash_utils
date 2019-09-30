@@ -1,16 +1,18 @@
 import pandas as pd
 from sqlalchemy import create_engine
 
-# add decorator to make a singleton class
-@singleton
 class sqliteHandler:
     """Class for handling the sqlite databases"""
     # members
-    # TODO pass sqlite name to constructor and make engine a class member - no longer singleton
+    __dbname = None     # name of the sqlite database
+    __engine = None     # sqlite db engine
 
     # constructor methods
-    def __init__(self):
-        pass
+    def __init__(self, dbname : str):
+        if not (isinstance(dbname, str)):
+            raise TypeError("@creator: {} is not a string".format(dbname))
+        __dbname = dbname
+        __engine = create_engine("sqlite:///"+__dbname)
 
     # destructor method
     def __del__(self):
@@ -27,8 +29,7 @@ class sqliteHandler:
         """
         csv_df = pd.read_csv(csv_name)
         print(csv_df.head())
-        engine = create_engine("sqlite:///"+db_name)
-        csv_df.to_sql('mpg', engine, if_exists='append', index=False)
+        csv_df.to_sql('mpg', __engine, if_exists='append', index=False)
 
 
     def sqlite_to_df(db_name: str, table_name: str):
@@ -38,8 +39,7 @@ class sqliteHandler:
         :param table_name: str
             name of table to populate the DataFrame from
         """
-        engine = create_engine("sqlite:///" + db_name)
-        df = pd.read_sql("SELECT * FROM " + table_name, engine)
+        df = pd.read_sql("SELECT * FROM " + table_name, __engine)
         # also see read_sql_query() and read_sql_table()
 
         return df
